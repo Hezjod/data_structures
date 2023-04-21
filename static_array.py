@@ -5,23 +5,35 @@ class StaticArray:
     def __init__(self, item_type: type, size: int) -> None:
         if not isinstance(item_type, type):
             raise ValueError("item_type must be a class")
+
         self._item_type = item_type
         self._size = size
         self._list = [None] * size
 
-    def __getitem__(self, index: int):
-        if index not in range(0, self._size):
-            raise IndexError("StaticArray index out of range")
-        return self._list[index]
+    def __getitem__(self, key: int | slice):
+        if isinstance(key, slice):
+           return self._list[key]
 
-    def __setitem__(self, index: int, item) -> None:
+        if isinstance(key, int):
+            if key not in range(0, self._size):
+                raise IndexError("StaticArray index out of range")
+            return self._list[key]
+
+        raise TypeError(f"list indices must be integers or slices, not {type(key)}")
+
+    def __setitem__(self, key: int, item) -> None:
+        if isinstance(key, slice):
+            raise NotImplementedError
+
         if not isinstance(item, self._item_type):
             raise TypeError(
                 f"Invalid type ({type(item)}) for {self._item_type} StaticArray"
             )
-        if index not in range(0, self._size):
+
+        if key not in range(0, self._size):
             raise IndexError("StaticArray index out of range")
-        self._list[index] = item
+
+        self._list[key] = item
 
     def __repr__(self) -> str:
         return self._list.__repr__()
@@ -31,3 +43,5 @@ class StaticArray:
 
     def __iter__(self) -> Iterator:
         return iter(self._list)
+
+
