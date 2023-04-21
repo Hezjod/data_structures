@@ -1,0 +1,2 @@
+class DataLossWarning(Warning):
+    pass
