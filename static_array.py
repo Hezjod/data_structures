@@ -9,8 +9,8 @@ T = TypeVar("T")
 
 class StaticArray(Generic[T]):
     def __init__(self, item_type: type[T], length: int) -> None:
-        if length <= 0:
-            raise ValueError("length has to be bigger than 0")
+        if length < 0:
+            raise ValueError("length has to be bigger or equal to 0")
 
         if not isinstance(item_type, type):
             raise ValueError("item_type must be a class")
@@ -86,10 +86,6 @@ class StaticArray(Generic[T]):
     @staticmethod
     def from_iter(item_type: type[T], arr: Iterable[T | None]) -> StaticArray[T | None]:
         items: list[T | None] = list(iter(arr))
-        if len(items) == 0:
-            raise ValueError(
-                f"can't create {__class__.__name__} from an empty iterable"
-            )
 
         new_static_array: StaticArray[T | None] = StaticArray(item_type, len(items))
         for index, item in enumerate(items):
